@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import './index.css';
+
+// Components
+import Navbar from './components/Navbar';
+import Card from './components/Card';
+
+// Config
+import config from './config.json';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar></Navbar>
+      <div className="section">
+        <div className="hero-container">
+          <span>Header text goes here. Description of business and services for the rental application. Sign up or rent something today!</span>
+          <div className="cta-buttons">
+            <button className="button primary">Click here</button>
+            <button className="button secondary">Click here</button>
+          </div>
+        </div>
+      </div>
+      <div className='section'>
+        <div className="cards-container">
+          <Card></Card>
+          <Card></Card>
+          <Card></Card>
+        </div>
+      </div>
     </div>
   );
 }
