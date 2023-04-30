@@ -75,7 +75,5 @@ describe('Rent', () => {
             const result = await rent.amountDue(1)
             expect(result).to.be.greaterThan(0)
         })
-    })
-
-    
+    })   
 })

@@ -8,6 +8,7 @@ import Card from './components/Card';
 import config from './config.json';
 
 function App() {
+
   return (
     <div className="App">
       <Navbar></Navbar>
