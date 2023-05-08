@@ -23,44 +23,59 @@ describe('Rent', () => {
 
         // Deploy Rent contract using created account addresses
         const Rent = await ethers.getContractFactory('Rent')
-        rent = await Rent.deploy(
-            book.address,
-            renter.address,
-            bookstore.address
-        )
-
+        rent = await Rent.connect(renter).deploy()
+        
     })
 
     // Test Deployment
     describe('Deployment', () => {
-        it('Returns NFT address', async () => {
-            const result = await rent.nftAddress()
-            expect(result).to.be.equal(book.address)
+        it('Returns contract address', async () => {
+            const result = await rent.address
+            expect(result).not.to.be.equal(undefined)
         })
-        it('Returns renter', async () => {
-            const result = await rent.renter()
+        it('Returns Owner', async () => {
+            const result = await rent.owner()
             expect(result).to.be.equal(renter.address)
         })
-        it('Returns bookstore', async () => {
-            const result = await rent.bookstore()
-            expect(result).to.be.equal(bookstore.address)
+    })
+    // Test Add Renter Function
+    describe('Add Renter', () => {
+        it('Returns renter', async () => {
+            console.log(renter.address)
+            // Add renter
+            transaction = await rent.addRenter(renter.address, "Joe", "Smith", true, false, 0, 0, 0)
+            await transaction.wait()
+            // Check renter
+            console.log(renter.address)
+            const result = rent.renters[renter.address]
+            expect(result).not.to.be.equal(undefined)
         })
     })
 
+
     // Check-out book
     describe('Check-out', () => {
-        it('Updates checkout status to true', async () => {
-            const transaction = await rent.connect(renter).checkOut(1)
-            await transaction.wait()
-            const result = await rent.isCheckedOut(1)
+        beforeEach(async () => {
+            rent.connect(renter).checkOut(renter.address)
+        })
+         it('Updates can rent status to false', async () => {
+            const result = await rent.renters[renter.address].canRent
+            expect(result).to.be.equal(false)
+        })
+        it('Updates active renter status to true', async () => {
+            const result = await rent.renters[renter.address].active
             expect(result).to.be.equal(true)
+        })
+        it('Sets Start Time', async () => {
+            const result = await rent.renters[renter.address].startTime
+            expect(result).to.be.greaterThan(0)
         })
     })
 
     // Check-in book
     describe('Check-in', () => {
         beforeEach(async () => {
-            const transaction = await rent.connect(renter).checkIn(1)
+            const transaction = await rent.connect(renter.address).checkIn(1)
             await transaction.wait()
         })
         it('Updates checkout status to false', async () => {

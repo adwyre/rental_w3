@@ -13,9 +13,6 @@ interface IERC721 {
 contract Rent {
 
   address public owner;
-  address public nftAddress;
-  address public renter;
-  address public bookstore;
 
   struct Renter {
     address payable walletAddress;
@@ -40,12 +37,9 @@ contract Rent {
   // rentals mapping with book nftId as key
   mapping (uint256 => Rental) public rentals;
 
-  constructor(address _nftAddress, address _renter, address _bookstore) {
+  constructor() {
     owner = msg.sender;
 
-    nftAddress = _nftAddress;
-    renter = _renter;
-    bookstore = _bookstore;
   }
 
   // Add renter
@@ -61,10 +55,41 @@ contract Rent {
       renters[_walletAddress] = Renter(_walletAddress, _firstName, _lastName, _canRent, _active, _amountDue, _startTime, _endTime);
     }
   // Check-out book
-  function checkOut()
+  function checkOut(address _walletAddress) public {
+    // set renter to active, add start time, and make unable to rent anything else
+    renters[_walletAddress].active = true;
+    renters[_walletAddress].startTime = block.timestamp;
+    renters[_walletAddress].canRent = false;
+    //rentals[_nftAddress] = Rental(true, 1, _walletAddress);
+  }
   // Check-in book
-
+  function checkIn(
+      address _walletAddress
+    ) public {
+      // set renter to active, add start time, and make unable to rent anything else
+      renters[_walletAddress].active = false;
+      renters[_walletAddress].endTime = block.timestamp;
+      // set amount due
+      setDue(_walletAddress);
+    }
   // Get total duration of book use
+  function getTotalTime(address _walletAddress) public view returns(uint){
+    uint total = renters[_walletAddress].endTime - renters[_walletAddress].startTime;
+    uint totalHours = total/60/60;
+    return  totalHours;
+  }
 
+  // Get Balance
+  function getBalance() public view returns(uint){
+    return address(this).balance;
+  }
   // Set Due amount
+  function setDue(address _walletAddress) internal {
+    uint totalHours = getTotalTime(_walletAddress);
+    renters[_walletAddress].amountDue = totalHours * 500000000000000;
+  }
+  // Check if able to rent
+  function canRentBook(address _walletAddress) public view returns(bool){
+    return renters[_walletAddress].canRent;
+  }
 }
