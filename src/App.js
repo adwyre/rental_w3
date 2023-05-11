@@ -1,7 +1,6 @@
 import './index.css';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import carMetadata from '../../metadata/carMetadata';
 
 // Components
 import Navbar from './components/Navbar';
@@ -15,14 +14,35 @@ import config from './config.json';
 
 
 function App() {
+  const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
   const [account, setAccount] = useState(null)
-  const [cars, setCars] = useState([])
+  const [cars, setCars] = useState([
+    {
+        "name": "Car 1",
+        "image": "https://images.unsplash.com/photo-1502877338535-766e1452684a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4144&q=80",
+        "id": "1",
+        "color": "Blue",
+        "type": "Sedan"
+    },
+    {
+        "name": "Car 2",
+        "image": "https://images.unsplash.com/photo-1615063029891-497bebd4f03c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4000&q=80",
+        "id": "2",
+        "color": "Grey",
+        "type": "SUV"
+    },
+    {
+        "name": "Car 3",
+        "image": "https://images.unsplash.com/photo-1579827672466-075fa21e0589?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4063&q=80",
+        "id": "3",
+        "color": "White",
+        "type": "Truck"
+    }
+])
 
 
   const loadBlockchainData = async () => {
-
-    setCars(carMetadata)
     
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setProvider(provider)
@@ -47,10 +67,10 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar></Navbar>
+      <Navbar account={account} setAccount={setAccount}></Navbar>
       <div className="section">
         <div className="hero-container">
-          <span>Header text goes here. Description of business and services for the rental application. Sign up or rent something today!</span>
+          <span>Explore the world in the best way. Get started with a car rental today!</span>
           <div className="cta-buttons">
             <button className="button primary">Click here</button>
             <button className="button secondary">Click here</button>
@@ -59,9 +79,9 @@ function App() {
       </div>
       <div className='section'>
         <div className="cards-container">
-          <Card></Card>
-          <Card></Card>
-          <Card></Card>
+        {cars.map((car, index) => (
+          <Card car={car} key={index}></Card>
+        ))}
         </div>
       </div>
     </div>
