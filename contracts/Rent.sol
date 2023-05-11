@@ -12,13 +12,14 @@ pragma solidity ^0.8.0;
 
 contract Rent {
 
-  address public owner;
+  address payable public owner;
 
   struct Renter {
     string firstName;
     string lastName;
     bool canRent;
     bool active;
+    uint256 balance;
     uint256 amountDue;
     uint256 startTime;
     uint256 endTime;
@@ -37,13 +38,18 @@ contract Rent {
   //mapping (uint256 => Rental) public rentals;
 
   constructor() {
-    owner = msg.sender;
+    owner = payable(msg.sender);
 
   }
 
   // Able to rent
   modifier canRentCar{
     require (renters[msg.sender].canRent == true, "Must not have a current rental or outstanding balance");
+    _;
+  }
+  // check if active renter
+  modifier isActive{
+    require (renters[msg.sender].active == true, "Must have a car checked out");
     _;
   }
 
@@ -53,10 +59,11 @@ contract Rent {
     string memory _lastName,
     bool _canRent,
     bool _active,
+    uint256 _balance,
     uint256 _amountDue,
     uint256 _startTime,
     uint256 _endTime) public {
-      renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _amountDue, _startTime, _endTime);
+      renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _balance, _amountDue, _startTime, _endTime);
     }
   // Check-out car
   function checkOut() public canRentCar{
@@ -67,16 +74,27 @@ contract Rent {
     //rentals[_nftAddress] = Rental(true, 1, _walletAddress);
   }
   // Check-in car
-  function checkIn() public {
+  function checkIn() public isActive{
       // set renter to active, add start time, and make unable to rent anything else
       renters[msg.sender].active = false;
       renters[msg.sender].endTime = block.timestamp;
       // set amount due
-      setDue();
+      //setDue();
+      renters[msg.sender].amountDue = 190000000000000;
     }
-  // Pay balance
-  function payBalance() public payable{
 
+  // Make deposit
+  function deposit() public payable{
+    renters[msg.sender].balance += msg.value;
+  }
+
+  // Pay balance due
+  function payDue() public payable{
+    require(msg.value == renters[msg.sender].amountDue, "Value must equal amount due");
+    require(msg.value <= renters[msg.sender].balance, "Balance is too low. Please make a deposit.");
+    renters[msg.sender].balance -= msg.value;
+    renters[msg.sender].amountDue = 0;
+    renters[msg.sender].canRent = true;
   }
 
 
@@ -89,7 +107,7 @@ contract Rent {
   // Set Due amount
   function setDue() internal {
     uint totalMinutes = getTotalTime();
-    renters[msg.sender].amountDue = totalMinutes * 11000000000000;
+    renters[msg.sender].amountDue = totalMinutes * 190000000000000;
   }
   // Get Balance
   function getBalance() public view returns(uint){
