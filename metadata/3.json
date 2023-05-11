@@ -1,25 +1,15 @@
 {
-    "name": "The Catcher in the Rye",
-    "description": "The Catcher in the Rye is an all-time classic in coming-of-age literature- an elegy to teenage alienation, capturing the deeply human need for connection and the bewildering sense of loss as we leave childhood behind.",
-    "image": "https://images.unsplash.com/photo-1510936470381-68e4c0a5e24b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2952&q=80",
+    "name": "Car 3",
+    "image": "https://images.unsplash.com/photo-1579827672466-075fa21e0589?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4063&q=80",
     "id": "3",
     "attributes": [
         {
-            "trait_type": "Purchase Price",
-            "value": 0.4
+            "trait_type": "Color",
+            "value": "White"
         },
         {
-            "trait_type": "Author",
-            "value": "J.D. Salinger"
-        },
-        {
-            "trait_type": "Genre",
-            "value": "Young Adult"
-        },
-      
-        {
-            "trait_type": "Publish Year",
-            "value": 1951
+            "trait_type": "Type",
+            "value": "Truck"
         }
     ]
 }

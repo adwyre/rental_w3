@@ -1,25 +1,15 @@
 {
-    "name": "The Great Gatsby",
-    "description": "This exemplary novel of the Jazz Age has been acclaimed by generations of readers. The story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, of lavish parties on Long Island at a time when The New York Times noted 'gin was the national drink and sex the national obsession,' it is an exquisitely crafted tale of America in the 1920s.",
-    "image": "https://images.unsplash.com/photo-1551396028-60ed2702a337?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2189&q=80",
+    "name": "Car 2",
+    "image": "https://images.unsplash.com/photo-1615063029891-497bebd4f03c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4000&q=80",
     "id": "2",
     "attributes": [
         {
-            "trait_type": "Purchase Price",
-            "value": 0.3
+            "trait_type": "Color",
+            "value": "Grey"
         },
         {
-            "trait_type": "Author",
-            "value": "F. Scott Fitzgerald"
-        },
-        {
-            "trait_type": "Genre",
-            "value": "Fiction"
-        },
-      
-        {
-            "trait_type": "Publish Year",
-            "value": 1925
+            "trait_type": "Type",
+            "value": "SUV"
         }
     ]
 }
