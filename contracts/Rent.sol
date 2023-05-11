@@ -33,7 +33,7 @@ contract Rent {
   // renters mapping with renter wallet address as key
   mapping (address => Renter) public renters;
 
-  // rentals mapping with book nftId as key
+  // rentals mapping with car nftId as key
   //mapping (uint256 => Rental) public rentals;
 
   constructor() {
@@ -42,8 +42,8 @@ contract Rent {
   }
 
   // Able to rent
-  modifier canRentBook(){
-    require (renters[msg.sender].canRent == true);
+  modifier canRentCar{
+    require (renters[msg.sender].canRent == true, "Must not have a current rental or outstanding balance");
     _;
   }
 
@@ -58,15 +58,15 @@ contract Rent {
     uint256 _endTime) public {
       renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _amountDue, _startTime, _endTime);
     }
-  // Check-out book
-  function checkOut() public {
+  // Check-out car
+  function checkOut() public canRentCar{
     // set renter to active, add start time, and make unable to rent anything else
     renters[msg.sender].active = true;
     renters[msg.sender].startTime = block.timestamp;
     renters[msg.sender].canRent = false;
     //rentals[_nftAddress] = Rental(true, 1, _walletAddress);
   }
-  // Check-in book
+  // Check-in car
   function checkIn() public {
       // set renter to active, add start time, and make unable to rent anything else
       renters[msg.sender].active = false;
@@ -74,21 +74,27 @@ contract Rent {
       // set amount due
       setDue();
     }
-  // Get total duration of book use
-  function getTotalTime() public view returns(uint){
-    uint total = renters[msg.sender].endTime - renters[msg.sender].startTime;
-    uint totalHours = total/60/60;
-    return  totalHours;
+  // Pay balance
+  function payBalance() public payable{
+
   }
 
+
+  // Get total duration of car use
+  function getTotalTime() public view returns(uint){
+    uint total = renters[msg.sender].endTime - renters[msg.sender].startTime;
+    uint totalMinutes = total/60;
+    return  totalMinutes;
+  }
+  // Set Due amount
+  function setDue() internal {
+    uint totalMinutes = getTotalTime();
+    renters[msg.sender].amountDue = totalMinutes * 11000000000000;
+  }
   // Get Balance
   function getBalance() public view returns(uint){
     return address(this).balance;
   }
-  // Set Due amount
-  function setDue() internal {
-    uint totalHours = getTotalTime();
-    renters[msg.sender].amountDue = totalHours * 500000000000000;
-  }
+  
 
 }
