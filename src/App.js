@@ -51,14 +51,30 @@ function App() {
     const rent = new ethers.Contract(config[network.chainId].rent.address, Rent, provider)
     setRent(rent)
 
-    
-
-
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = ethers.utils.getAddress(accounts[0])
       setAccount(account);
     })
+  }
+
+  const handleRegister = () => {
+    document.getElementById("register").classList.add("show-modal")
+  }
+
+  const handleClose = () => {
+    document.getElementById("register").classList.remove("show-modal")
+  }
+
+  const handleSave = async () => {
+    const firstName = document.getElementById("firstName").value
+    const lastName = document.getElementById("lastName").value
+
+    const signer = await provider.getSigner()
+    // add renter
+    let transaction = await rent.connect(signer).addRenter(firstName, lastName, true, false, 0, 0, 0, 0)
+    await transaction.wait()
+
   }
 
   useEffect(() => {
@@ -72,16 +88,34 @@ function App() {
         <div className="hero-container">
           <span>Explore the world in the best way. Get started with a car rental today!</span>
           <div className="cta-buttons">
-            <button className="button primary">Click here</button>
-            <button className="button secondary">Click here</button>
+            <button className="button primary" onClick={handleRegister}>Register as a renter</button>
           </div>
         </div>
       </div>
       <div className='section'>
         <div className="cards-container">
         {cars.map((car, index) => (
-          <Card car={car} key={index} rent={rent} account={account}></Card>
+          <Card car={car} key={index} rent={rent} account={account} provider={provider}></Card>
         ))}
+        </div>
+      </div>
+      <div className="modal" id="register">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Register as a renter</h5>
+            </div>
+            <div className="modal-body">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" className="form-field"/>
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" className="form-field"/>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="button primary" onClick={handleSave}>Save</button>
+              <button type="button" className="button secondary" onClick={handleClose}>Close</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

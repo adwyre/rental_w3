@@ -1,6 +1,29 @@
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
 
+const Card = ({car, account, rent, provider}) => {
 
-const Card = ({car}) => {
+  const[carAvailable, setCarAvailable] = useState(true)
+
+  const fetchCarData = async () => {
+    const available = await rent.carAvailable[car.id]
+    setCarAvailable(available)
+  }
+
+  const handleCheckOut = async () => {
+    const signer = await provider.getSigner()
+    // checkout car
+    let transaction = await rent.connect(signer).checkOut(car.id)
+    await transaction.wait()
+    // set car availability
+    setCarAvailable(false)
+  }
+
+  useEffect(() => {
+    fetchCarData()
+    console.log(carAvailable)
+  }, [carAvailable])
+
 
   return (
     <div className="card">
@@ -9,11 +32,11 @@ const Card = ({car}) => {
       </div>
       <div className="card-body">
         <p className="card-text">{car.name}</p>
-        <p className="card-text">{car.color}</p>
-        <p className="card-text">{car.type}</p>
+        <p className="card-text">Color: {car.color}</p>
+        <p className="card-text">Type: {car.type}</p>
         <div className="card-buttons">
-          <button type="button" class="button check-out">Check-out</button>
-          <button type="button" class="button check-in">Check-in</button>
+          <button type="button" className="button check-out" onClick={handleCheckOut}>Check-out</button>
+          <button type="button" className="button check-in">Check-in</button>
         </div>
       </div>
     </div>

@@ -15,6 +15,11 @@ async function main() {
   const rent = await Rent.deploy()
   await rent.deployed()
 
+  // Set car availability
+  for(let i = 0; i < 3; i++)  {
+    rent.carAvailable[i] = true;
+  }
+
   console.log(`Deployed Rent Contract at: ${rent.address}`)
 
 }
