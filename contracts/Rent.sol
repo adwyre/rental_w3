@@ -33,6 +33,8 @@ contract Rent {
 
   // renters mapping with renter wallet address as key
   mapping (address => Renter) public renters;
+  // available cars by id 
+  mapping (uint => bool) public carAvailable;
 
   // rentals mapping with car nftId as key
   //mapping (uint256 => Rental) public rentals;
@@ -53,6 +55,18 @@ contract Rent {
     _;
   }
 
+  // check if car is available
+  modifier isAvailable(uint _id) {
+    require (carAvailable[_id], "Car is not available");
+    _;
+  }
+
+  // check if car is checked out
+  modifier isCheckedOut(uint _id){
+    require (carAvailable[_id]);
+    _;
+  }
+
   // Add renter
   function addRenter(
     string memory _firstName,
@@ -66,7 +80,7 @@ contract Rent {
       renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _balance, _amountDue, _startTime, _endTime);
     }
   // Check-out car
-  function checkOut() public canRentCar{
+  function checkOut(uint _id) public canRentCar isAvailable(_id){
     // set renter to active, add start time, and make unable to rent anything else
     renters[msg.sender].active = true;
     renters[msg.sender].startTime = block.timestamp;
@@ -74,7 +88,7 @@ contract Rent {
     //rentals[_nftAddress] = Rental(true, 1, _walletAddress);
   }
   // Check-in car
-  function checkIn() public isActive{
+  function checkIn(uint _id) public isActive isCheckedOut(_id){
       // set renter to active, add start time, and make unable to rent anything else
       renters[msg.sender].active = false;
       renters[msg.sender].endTime = block.timestamp;

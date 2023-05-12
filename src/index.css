@@ -126,12 +126,23 @@ body {
   box-sizing: border-box;
   border-radius: 5px;
   box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-}
-.card-body {
-  height: 150px;
   background-color: white;
+}
+.crop {
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+ }
+ .crop img {
+  height: auto;
+  width: 100%;
+ }
+.card-body {
+  height: auto;
+  width: 100%;
   align-self: flex-end;
   padding: 1rem;
+  box-sizing: border-box;
 }
 .card-text {
 
@@ -139,19 +150,21 @@ body {
 .card-buttons {
   width: 100%;
   flex-direction: row;
-  justify-content: right;
+  justify-content: center;
+  display: flex;
 }
 .check-out, .check-in {
   background-color: white;
   color: #283237;
   border: 1px solid #283237;
+  margin: 0 10px;
 }
 .check-out:hover {
   background-color: #283237;
   color: white
 }
 .check-in:hover {
-  background-color: #495963;
+  background-color: #7a95a5;
   color: white;
-  border-color: #495963;
+  border-color: #7a95a5;
 }

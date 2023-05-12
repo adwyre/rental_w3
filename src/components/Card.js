@@ -4,7 +4,9 @@ const Card = ({car}) => {
 
   return (
     <div className="card">
-      <img></img>
+      <div className="crop">
+         <img src={car.image}></img>
+      </div>
       <div className="card-body">
         <p className="card-text">{car.name}</p>
         <p className="card-text">{car.color}</p>

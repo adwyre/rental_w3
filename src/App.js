@@ -20,10 +20,10 @@ function App() {
   const [cars, setCars] = useState([
     {
         "name": "Car 1",
-        "image": "https://images.unsplash.com/photo-1502877338535-766e1452684a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4144&q=80",
+        "image": "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3432&q=80",
         "id": "1",
-        "color": "Blue",
-        "type": "Sedan"
+        "color": "Red",
+        "type": "Sport"
     },
     {
         "name": "Car 2",
@@ -80,7 +80,7 @@ function App() {
       <div className='section'>
         <div className="cards-container">
         {cars.map((car, index) => (
-          <Card car={car} key={index}></Card>
+          <Card car={car} key={index} rent={rent} account={account}></Card>
         ))}
         </div>
       </div>
