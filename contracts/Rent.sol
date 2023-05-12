@@ -39,18 +39,6 @@ contract Rent {
     _;
   }
 
-  // check if car is available
-  modifier isAvailable(uint _id) {
-    require (carAvailable[_id], "Car is not available");
-    _;
-  }
-
-  // check if car is checked out
-  modifier isCheckedOut(uint _id){
-    require (carAvailable[_id]);
-    _;
-  }
-
   // Add renter
   function addRenter(
     string memory _firstName,
@@ -64,21 +52,17 @@ contract Rent {
       renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _balance, _amountDue, _startTime, _endTime);
     }
   // Check-out car
-  function checkOut(uint _id) public canRentCar isAvailable(_id){
+  function checkOut() public canRentCar{
     // set renter to active, add start time, and make unable to rent anything else
     renters[msg.sender].active = true;
     renters[msg.sender].startTime = block.timestamp;
     renters[msg.sender].canRent = false;
-    // set car to unavailable
-    carAvailable[_id] = false;
   }
   // Check-in car
-  function checkIn(uint _id) public isActive isCheckedOut(_id){
+  function checkIn() public isActive{
       // set renter to active, add start time, and make unable to rent anything else
       renters[msg.sender].active = false;
       renters[msg.sender].endTime = block.timestamp;
-      // set car to available
-      carAvailable[_id] = true;
       // set amount due
       //setDue();
       renters[msg.sender].amountDue = 190000000000000;

@@ -13,15 +13,23 @@ const Card = ({car, account, rent, provider}) => {
   const handleCheckOut = async () => {
     const signer = await provider.getSigner()
     // checkout car
-    let transaction = await rent.connect(signer).checkOut(car.id)
+    let transaction = await rent.connect(signer).checkOut()
     await transaction.wait()
     // set car availability
     setCarAvailable(false)
   }
 
+  const handleCheckIn = async () => {
+    const signer = await provider.getSigner()
+    // checkout car
+    let transaction = await rent.connect(signer).checkIn()
+    await transaction.wait()
+    // set car availability
+    setCarAvailable(true)
+  }
+
   useEffect(() => {
     fetchCarData()
-    console.log(carAvailable)
   }, [carAvailable])
 
 
@@ -36,7 +44,7 @@ const Card = ({car, account, rent, provider}) => {
         <p className="card-text">Type: {car.type}</p>
         <div className="card-buttons">
           <button type="button" className="button check-out" onClick={handleCheckOut}>Check-out</button>
-          <button type="button" className="button check-in">Check-in</button>
+          <button type="button" className="button check-in" onClick={handleCheckIn}>Check-in</button>
         </div>
       </div>
     </div>

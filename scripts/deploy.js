@@ -18,6 +18,7 @@ async function main() {
   // Set car availability
   for(let i = 0; i < 3; i++)  {
     rent.carAvailable[i] = true;
+    console.log(`Car ${i} isAvailable: ${rent.carAvailable[i]}`)
   }
 
   console.log(`Deployed Rent Contract at: ${rent.address}`)

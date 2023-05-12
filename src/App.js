@@ -17,6 +17,7 @@ function App() {
   const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
   const [account, setAccount] = useState(null)
+  const [total, setTotal] = useState(0)
   const [cars, setCars] = useState([
     {
         "name": "Car 1",
@@ -62,11 +63,11 @@ function App() {
     document.getElementById("register").classList.add("show-modal")
   }
 
-  const handleClose = () => {
+  const handleRegisterClose = () => {
     document.getElementById("register").classList.remove("show-modal")
   }
 
-  const handleSave = async () => {
+  const handleRegisterSave = async () => {
     const firstName = document.getElementById("firstName").value
     const lastName = document.getElementById("lastName").value
 
@@ -76,6 +77,34 @@ function App() {
     await transaction.wait()
 
   }
+  const handleDeposit = () => {
+    document.getElementById("deposit").classList.add("show-modal")
+  }
+  const handleDepositClose = () => {
+    document.getElementById("deposit").classList.remove("show-modal")
+  }
+
+  const handleDepositSave = async () => {
+    const depositAmount = document.getElementById("depositAmount").value
+
+    const signer = await provider.getSigner()
+    // make deposit
+    let transaction = await rent.connect(signer).deposit({ value: depositAmount})
+    await transaction.wait()
+
+  }
+
+
+  const fetchTotal = async () => {
+    const balance = await rent.Renters[account].balance
+    const amountDue = await rent.Renters[account].amountDue
+    setTotal(balance - amountDue)
+  }
+
+  useEffect(() => {
+    fetchTotal()
+    console.log(total)
+  }, [])
 
   useEffect(() => {
     loadBlockchainData()
@@ -83,13 +112,14 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar account={account} setAccount={setAccount}></Navbar>
+      <Navbar account={account} setAccount={setAccount} rent={rent}></Navbar>
       <div className="section">
         <div className="hero-container">
           <span>Explore the world in the best way. Get started with a car rental today!</span>
           <div className="cta-buttons">
             <button className="button primary" onClick={handleRegister}>Register as a renter</button>
-          </div>
+            <button className="button secondary" onClick={handleDeposit}>Make a deposit</button>
+            </div>
         </div>
       </div>
       <div className='section'>
@@ -99,6 +129,7 @@ function App() {
         ))}
         </div>
       </div>
+
       <div className="modal" id="register">
         <div className="modal-dialog">
           <div className="modal-content">
@@ -112,8 +143,26 @@ function App() {
                 <input type="text" id="lastName" className="form-field"/>
             </div>
             <div className="modal-footer">
-              <button type="button" className="button primary" onClick={handleSave}>Save</button>
-              <button type="button" className="button secondary" onClick={handleClose}>Close</button>
+              <button type="button" className="button primary" onClick={handleRegisterSave}>Save</button>
+              <button type="button" className="button secondary" onClick={handleRegisterClose}>Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="modal" id="deposit">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Make a deposit</h5>
+            </div>
+            <div className="modal-body">
+                <label for="depositAmount">Amount</label>
+                <input type="number" id="depositAmount" className="form-field"/>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="button primary" onClick={handleDepositSave}>Save</button>
+              <button type="button" className="button secondary" onClick={handleDepositClose}>Close</button>
             </div>
           </div>
         </div>
