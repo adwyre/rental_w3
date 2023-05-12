@@ -2,14 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-// interface IERC721 {
-//     function transferFrom(
-//         address _from,
-//         address _to,
-//         uint256 _id
-//     ) external;
-// }
-
 contract Rent {
 
   address payable public owner;
@@ -25,19 +17,11 @@ contract Rent {
     uint256 endTime;
   }
 
-  // struct Rental {
-  //   bool isCheckedOut;
-  //   uint256 price;
-  //   Renter renter;
-  // }
-
   // renters mapping with renter wallet address as key
   mapping (address => Renter) public renters;
   // available cars by id 
   mapping (uint => bool) public carAvailable;
 
-  // rentals mapping with car nftId as key
-  //mapping (uint256 => Rental) public rentals;
 
   constructor() {
     owner = payable(msg.sender);
@@ -85,13 +69,16 @@ contract Rent {
     renters[msg.sender].active = true;
     renters[msg.sender].startTime = block.timestamp;
     renters[msg.sender].canRent = false;
-    //rentals[_nftAddress] = Rental(true, 1, _walletAddress);
+    // set car to unavailable
+    carAvailable[_id] = false;
   }
   // Check-in car
   function checkIn(uint _id) public isActive isCheckedOut(_id){
       // set renter to active, add start time, and make unable to rent anything else
       renters[msg.sender].active = false;
       renters[msg.sender].endTime = block.timestamp;
+      // set car to available
+      carAvailable[_id] = true;
       // set amount due
       //setDue();
       renters[msg.sender].amountDue = 190000000000000;
