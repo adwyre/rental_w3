@@ -94,6 +94,12 @@ contract Rent {
     uint totalMinutes = getTotalTime();
     renters[msg.sender].amountDue = totalMinutes * 190000000000000;
   }
+  // returns balance - amount due
+  function getNetBalance() public view returns(uint) {
+    uint currBalance = renters[msg.sender].balance;
+    uint currDue = renters[msg.sender].amountDue;
+    return currBalance - currDue;
+  }
   // Get Balance
   function getBalance() public view returns(uint){
     return address(this).balance;

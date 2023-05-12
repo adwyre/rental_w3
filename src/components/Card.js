@@ -6,7 +6,7 @@ const Card = ({car, account, rent, provider}) => {
   const[carAvailable, setCarAvailable] = useState(true)
 
   const fetchCarData = async () => {
-    const available = await rent.carAvailable[car.id]
+    const available = await rent.carAvailable(car.id)
     setCarAvailable(available)
   }
 

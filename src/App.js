@@ -7,17 +7,19 @@ import Navbar from './components/Navbar';
 import Card from './components/Card';
 
 // ABIs
-import Rent from './abis/Rent.json'
+import RentABI from './abis/Rent.json'
 
 // Config
 import config from './config.json';
 
 
 function App() {
+  const [test, setTest] = useState(null)
+
   const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
   const [account, setAccount] = useState(null)
-  const [total, setTotal] = useState(0)
+  const [renter, setRenter] = useState({})
   const [cars, setCars] = useState([
     {
         "name": "Car 1",
@@ -45,11 +47,12 @@ function App() {
 
   const loadBlockchainData = async () => {
     
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider)
+    const signer = provider.getSigner();
     const network = await provider.getNetwork()
-
-    const rent = new ethers.Contract(config[network.chainId].rent.address, Rent, provider)
+    const address = config[network.chainId].rent.address;
+    const rent = new ethers.Contract(address, RentABI, signer);
     setRent(rent)
 
     window.ethereum.on('accountsChanged', async () => {
@@ -75,7 +78,8 @@ function App() {
     // add renter
     let transaction = await rent.connect(signer).addRenter(firstName, lastName, true, false, 0, 0, 0, 0)
     await transaction.wait()
-
+    setTest(rent.renters(account).firstName)
+    console.log(test)
   }
   const handleDeposit = () => {
     document.getElementById("deposit").classList.add("show-modal")
@@ -94,28 +98,36 @@ function App() {
 
   }
 
+  const fetchBalance = async ()=> {
+    const balance = await rent.getBalance();
+    setTest(balance);
+    console.log(balance);
+  }
 
-  const fetchTotal = async () => {
-    const balance = await rent.Renters[account].balance
-    const amountDue = await rent.Renters[account].amountDue
-    setTotal(balance - amountDue)
+  const fetchRenter = async () => {
+    let transaction = await rent.renters(account);
+    await transaction.wait();
+    setRenter(transaction)
   }
 
   useEffect(() => {
-    fetchTotal()
-    console.log(total)
-  }, [])
-
-  useEffect(() => {
-    loadBlockchainData()
+    loadBlockchainData();
+    fetchBalance();
+    fetchRenter();
   }, [])
 
   return (
     <div className="App">
-      <Navbar account={account} setAccount={setAccount} rent={rent}></Navbar>
+      <Navbar account={account} setAccount={setAccount}></Navbar>
       <div className="section">
         <div className="hero-container">
-          <span>Explore the world in the best way. Get started with a car rental today!</span>
+          {renter ? (
+             <span>{renter.firstName}</span>
+          ) : (
+            <span>loading...</span>
+          )
+          }
+         
           <div className="cta-buttons">
             <button className="button primary" onClick={handleRegister}>Register as a renter</button>
             <button className="button secondary" onClick={handleDeposit}>Make a deposit</button>
