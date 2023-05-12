@@ -51,6 +51,14 @@ contract Rent {
     uint256 _endTime) public {
       renters[msg.sender] = Renter(_firstName, _lastName, _canRent, _active, _balance, _amountDue, _startTime, _endTime);
     }
+
+  function getRenter() public view returns(string memory firstName, string memory lastName, bool canRent, bool active) {
+        firstName = renters[msg.sender].firstName;
+        lastName = renters[msg.sender].lastName;
+        canRent = renters[msg.sender].canRent;
+        active = renters[msg.sender].active;
+    }
+
   // Check-out car
   function checkOut() public canRentCar{
     // set renter to active, add start time, and make unable to rent anything else
@@ -104,6 +112,4 @@ contract Rent {
   function getBalance() public view returns(uint){
     return address(this).balance;
   }
-  
-
 }
