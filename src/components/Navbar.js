@@ -3,13 +3,25 @@ import { ethers } from 'ethers';
 import React, { useState, useEffect } from 'react';
 
 
-const Navbar = ({ account, setAccount }) => {
+const Navbar = ({ account, setAccount, rent}) => {
+
+  const [netBalance, setNetBalance] = useState()
+
+  const fetchNetBalance = async () => {
+    const netData = await rent.getNetBalance();
+    setNetBalance(netData)
+    console.log(netBalance)
+  }
 
   const connectHandler = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     const account = ethers.utils.getAddress(accounts[0])
     setAccount(account);
   }
+
+  useEffect(() => {
+    fetchNetBalance()
+  }, [account])
 
 
   return (

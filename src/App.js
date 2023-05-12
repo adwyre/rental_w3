@@ -74,12 +74,10 @@ function App() {
     const firstName = document.getElementById("firstName").value
     const lastName = document.getElementById("lastName").value
 
-    const signer = await provider.getSigner()
     // add renter
-    let transaction = await rent.connect(signer).addRenter(firstName, lastName, true, false, 0, 0, 0, 0)
+    let transaction = await rent.addRenter(firstName, lastName, true, false, 0, 0, 0, 0)
     await transaction.wait()
-    setTest(rent.renters(account).firstName)
-    console.log(test)
+    setRenter(transaction)
   }
   const handleDeposit = () => {
     document.getElementById("deposit").classList.add("show-modal")
@@ -101,24 +99,23 @@ function App() {
   const fetchBalance = async ()=> {
     const balance = await rent.getBalance();
     setTest(balance);
-    console.log(balance);
   }
 
   const fetchRenter = async () => {
-    let transaction = await rent.renters(account);
-    await transaction.wait();
-    setRenter(transaction)
+    const renterData = await rent.getRenter();
+    setRenter(renterData)
+    console.log(renter)
   }
 
   useEffect(() => {
     loadBlockchainData();
     fetchBalance();
     fetchRenter();
-  }, [])
+  }, [account])
 
   return (
     <div className="App">
-      <Navbar account={account} setAccount={setAccount}></Navbar>
+      <Navbar account={account} setAccount={setAccount} renter={renter} rent={rent}></Navbar>
       <div className="section">
         <div className="hero-container">
           {renter ? (
