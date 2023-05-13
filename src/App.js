@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 // Components
 import Navbar from './components/Navbar';
 import Card from './components/Card';
+import Dashboard from './components/Dashboard';
 
 // ABIs
 import RentABI from './abis/Rent.json'
@@ -16,6 +17,7 @@ import config from './config.json';
 function App() {
   const [test, setTest] = useState(null)
 
+  
   const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
   const [account, setAccount] = useState(null)
@@ -79,22 +81,7 @@ function App() {
     await transaction.wait()
     setRenter(transaction)
   }
-  const handleDeposit = () => {
-    document.getElementById("deposit").classList.add("show-modal")
-  }
-  const handleDepositClose = () => {
-    document.getElementById("deposit").classList.remove("show-modal")
-  }
-
-  const handleDepositSave = async () => {
-    const depositAmount = document.getElementById("depositAmount").value
-
-    const signer = await provider.getSigner()
-    // make deposit
-    let transaction = await rent.connect(signer).deposit({ value: depositAmount})
-    await transaction.wait()
-
-  }
+  
 
   const fetchBalance = async ()=> {
     const balance = await rent.getBalance();
@@ -107,6 +94,8 @@ function App() {
     console.log(renter)
   }
 
+
+
   useEffect(() => {
     loadBlockchainData();
     fetchBalance();
@@ -115,20 +104,23 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar account={account} setAccount={setAccount} renter={renter} rent={rent}></Navbar>
+      <Navbar account={account} setAccount={setAccount} renter={renter} ></Navbar>
       <div className="section">
         <div className="hero-container">
-          {renter ? (
-             <span>{renter.firstName}</span>
+          {renter.firstName !== "" ? (
+             <Dashboard renter={renter} provider={provider} rent={rent}/>
           ) : (
-            <span>loading...</span>
+            <> 
+            <span>Get started with a rental today!</span>
+            <div className="cta-buttons">
+              <button className="button primary" onClick={handleRegister}>Register as a renter</button>
+            </div>
+            </>
+           
           )
           }
          
-          <div className="cta-buttons">
-            <button className="button primary" onClick={handleRegister}>Register as a renter</button>
-            <button className="button secondary" onClick={handleDeposit}>Make a deposit</button>
-            </div>
+          
         </div>
       </div>
       <div className='section'>
@@ -159,23 +151,6 @@ function App() {
         </div>
       </div>
 
-      <div className="modal" id="deposit">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Make a deposit</h5>
-            </div>
-            <div className="modal-body">
-                <label for="depositAmount">Amount</label>
-                <input type="number" id="depositAmount" className="form-field"/>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="button primary" onClick={handleDepositSave}>Save</button>
-              <button type="button" className="button secondary" onClick={handleDepositClose}>Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
