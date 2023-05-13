@@ -17,7 +17,7 @@ import config from './config.json';
 function App() {
   const [test, setTest] = useState(null)
 
-  
+  const [updated, setUpdated] = useState(false)
   const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
   const [account, setAccount] = useState(null)
@@ -80,13 +80,9 @@ function App() {
     let transaction = await rent.addRenter(firstName, lastName, true, false, 0, 0, 0, 0)
     await transaction.wait()
     setRenter(transaction)
+    setUpdated(!updated)
   }
-  
 
-  const fetchBalance = async ()=> {
-    const balance = await rent.getBalance();
-    setTest(balance);
-  }
 
   const fetchRenter = async () => {
     const renterData = await rent.getRenter();
@@ -98,17 +94,16 @@ function App() {
 
   useEffect(() => {
     loadBlockchainData();
-    fetchBalance();
     fetchRenter();
   }, [account])
 
   return (
     <div className="App">
-      <Navbar account={account} setAccount={setAccount} renter={renter} ></Navbar>
+      <Navbar account={account} setAccount={setAccount}></Navbar>
       <div className="section">
         <div className="hero-container">
           {renter.firstName !== "" ? (
-             <Dashboard renter={renter} provider={provider} rent={rent}/>
+             <Dashboard renter={renter} provider={provider} rent={rent} updated={updated}/>
           ) : (
             <> 
             <span>Get started with a rental today!</span>
@@ -126,7 +121,7 @@ function App() {
       <div className='section'>
         <div className="cards-container">
         {cars.map((car, index) => (
-          <Card car={car} key={index} rent={rent} account={account} provider={provider}></Card>
+          <Card car={car} key={index} rent={rent} account={account} provider={provider} updated={updated} setUpdated={setUpdated}></Card>
         ))}
         </div>
       </div>

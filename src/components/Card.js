@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
-const Card = ({car, account, rent, provider}) => {
+const Card = ({car, account, rent, provider, updated, setUpdated}) => {
 
   const[carAvailable, setCarAvailable] = useState(true)
 
@@ -17,6 +17,7 @@ const Card = ({car, account, rent, provider}) => {
     await transaction.wait()
     // set car availability
     setCarAvailable(false)
+    setUpdated(!updated)
   }
 
   const handleCheckIn = async () => {
@@ -26,6 +27,7 @@ const Card = ({car, account, rent, provider}) => {
     await transaction.wait()
     // set car availability
     setCarAvailable(true)
+    setUpdated(!updated)
   }
 
   useEffect(() => {

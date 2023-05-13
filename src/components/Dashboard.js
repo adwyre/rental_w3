@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
-const Dashboard = ({renter, provider, rent}) => {
+const Dashboard = ({renter, provider, rent, updated}) => {
 
   const [netBalance, setNetBalance] = useState()
 
@@ -12,7 +12,7 @@ const Dashboard = ({renter, provider, rent}) => {
 
   useEffect(() => {
     fetchNetBalance();
-  }, [])
+  }, [updated])
 
 
   const handleDeposit = () => {
