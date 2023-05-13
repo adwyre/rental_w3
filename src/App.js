@@ -15,8 +15,7 @@ import config from './config.json';
 
 
 function App() {
-  const [test, setTest] = useState(null)
-
+  const [netBalance, setNetBalance] = useState()
   const [updated, setUpdated] = useState(false)
   const [provider, setProvider] = useState(null)
   const [rent, setRent] = useState(null);
@@ -87,15 +86,22 @@ function App() {
   const fetchRenter = async () => {
     const renterData = await rent.getRenter();
     setRenter(renterData)
-    console.log(renter)
   }
 
-
+  const fetchNetBalance = async () => {
+    const netData = await rent.getNetBalance();
+    setNetBalance(ethers.utils.formatEther(netData))
+    console.log(netBalance)
+  }
 
   useEffect(() => {
     loadBlockchainData();
     fetchRenter();
   }, [account])
+
+  useEffect(() => {
+    fetchNetBalance();
+  }, [account, updated])
 
   return (
     <div className="App">
@@ -103,7 +109,7 @@ function App() {
       <div className="section">
         <div className="hero-container">
           {renter.firstName !== "" ? (
-             <Dashboard renter={renter} provider={provider} rent={rent} updated={updated}/>
+             <Dashboard renter={renter} provider={provider} rent={rent} netBalance={netBalance} setUpdated={setUpdated} updated={updated}/>
           ) : (
             <> 
             <span>Get started with a rental today!</span>
