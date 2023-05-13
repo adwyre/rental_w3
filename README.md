@@ -1,3 +1,11 @@
+# Car Rental Dapp
+
+-Register as a renter
+-Check-out/ Check-in rentals
+-Deposit ETH into renter account
+-Make payments for completed rentals
+<img width="1437" alt="dapp_updated" src="https://github.com/adwyre/rental_w3/assets/44531434/f4e0ca0e-edf6-4ff4-94eb-28162151012f">
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
